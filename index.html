@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>HPA SKU Catalog (Shared CSV)</title>
+  <title>HPA SKU Catalog (Read‑Only)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <style>
     :root {
       --bg: #0b1720;
@@ -14,12 +15,9 @@
       --text: #f7fbff;
       --muted: #a6b4c4;
       --border-subtle: #233546;
-      --danger: #ff7676;
-      --success: #6ee7b7;
       --radius-lg: 14px;
       --radius-pill: 999px;
       --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.45);
-      --shadow-pill: 0 4px 15px rgba(0, 0, 0, 0.35);
       --transition-fast: 0.18s ease-out;
     }
 
@@ -30,8 +28,8 @@
     }
 
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #12283a 0, #050b10 52%, #020509 100%);
+      font-family: system-ui, sans-serif;
+      background: radial-gradient(circle at top, #12283a, #050b10);
       color: var(--text);
       min-height: 100vh;
     }
@@ -53,24 +51,17 @@
       justify-content: space-between;
     }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .title-block {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
     .title-block h1 {
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       font-weight: 650;
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--muted);
     }
 
     .pill {
@@ -80,121 +71,14 @@
       background: var(--accent-soft);
       color: var(--accent);
       border: 1px solid rgba(97, 218, 251, 0.5);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
     }
 
-    .subtitle {
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    .quick-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .btn {
-      border-radius: var(--radius-pill);
-      border: 1px solid var(--border-subtle);
-      background: rgba(20, 35, 50, 0.85);
-      color: var(--text);
-      padding: 6px 12px;
-      font-size: 0.8rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      box-shadow: var(--shadow-pill);
-      transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent) 0%, #4b9fff 45%, #7b61ff 100%);
-      color: #021018;
-      border: none;
-    }
-
-    .btn span.icon {
-      font-size: 1rem;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
-    }
-
-    .btn-small {
-      padding: 4px 9px;
-      font-size: 0.75rem;
-    }
-
-    .btn-remove {
-      border-color: rgba(248, 113, 113, 0.7);
-      color: #fecaca;
-      background: rgba(30, 64, 74, 0.4);
-    }
-
-    .btn-remove:hover {
-      background: rgba(220, 38, 38, 0.3);
-      border-color: rgba(248, 113, 113, 1);
-      color: #fee2e2;
-    }
-
-    .btn-secondary {
-      border-color: rgba(148, 163, 184, 0.8);
-      color: #e5e7eb;
-      background: rgba(15, 23, 42, 0.6);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(30, 64, 175, 0.4);
-      border-color: rgba(129, 140, 248, 0.9);
-    }
-
-    /* TABS */
-    .tabs {
-      display: flex;
-      gap: 6px;
-      border-bottom: 1px solid var(--border-subtle);
-      margin-top: 4px;
-    }
-
-    .tab {
-      padding: 6px 12px;
-      font-size: 0.8rem;
-      border-radius: 999px 999px 0 0;
-      border: 1px solid transparent;
-      background: transparent;
-      color: var(--muted);
-      cursor: pointer;
-      transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
-    }
-
-    .tab.active {
-      background: rgba(15, 23, 42, 0.95);
-      color: var(--text);
-      border-color: var(--border-subtle);
-      border-bottom-color: rgba(15, 23, 42, 0.95);
-    }
-
-    .tab:not(.active):hover {
-      background: rgba(15, 23, 42, 0.6);
-      color: #e5e7eb;
-    }
-
-    .tab-content {
-      margin-top: 8px;
-    }
-
-    /* FILTER BAR (Browse tab) */
+    /* FILTER CONTROL WRAPPER */
     .controls {
-      background: linear-gradient(135deg, rgba(21, 37, 54, 0.95), rgba(7, 27, 44, 0.98));
+      background: rgba(21, 37, 54, 0.95);
       border-radius: var(--radius-lg);
       border: 1px solid var(--border-subtle);
-      padding: 12px;
-      box-shadow: var(--shadow-soft);
+      padding: 14px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -203,7 +87,6 @@
     @media (min-width: 900px) {
       .controls {
         flex-direction: row;
-        flex-wrap: wrap;
         align-items: center;
       }
     }
@@ -211,7 +94,6 @@
     .search-wrapper {
       flex: 2;
       position: relative;
-      min-width: 220px;
     }
 
     .search-input {
@@ -222,12 +104,6 @@
       background: rgba(5, 16, 26, 0.9);
       color: var(--text);
       font-size: 0.9rem;
-      outline: none;
-      box-shadow: var(--shadow-pill);
-    }
-
-    .search-input::placeholder {
-      color: #62758a;
     }
 
     .search-icon {
@@ -250,720 +126,384 @@
     .filter-group {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      min-width: 130px;
+      gap: 3px;
+      min-width: 140px;
     }
 
     .filter-label {
+      color: var(--muted);
       font-size: 0.75rem;
-      text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: #7c8ea3;
     }
 
-    .text-filter,
-    select {
+    .filter-input {
       border-radius: var(--radius-pill);
       border: 1px solid var(--border-subtle);
-      padding: 6px 12px;
+      padding: 6px 10px;
       background: rgba(10, 21, 32, 0.9);
       color: var(--text);
-      font-size: 0.8rem;
-      outline: none;
     }
 
-    select {
+    select.filter-input {
       appearance: none;
-      padding-right: 28px;
       background-image: linear-gradient(45deg, transparent 50%, #7c8ea3 50%),
         linear-gradient(135deg, #7c8ea3 50%, transparent 50%);
-      background-position: calc(100% - 12px) 9px, calc(100% - 7px) 9px;
-      background-size: 5px 5px, 5px 5px;
+      background-position: calc(100% - 14px) 10px, calc(100% - 8px) 10px;
+      background-size: 6px 6px;
       background-repeat: no-repeat;
     }
 
-    /* MANAGE TAB */
-    .add-sku {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(12, 20, 37, 0.98));
-      border-radius: var(--radius-lg);
-      border: 1px dashed var(--border-subtle);
-      padding: 12px;
-      box-shadow: var(--shadow-soft);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .add-sku-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .add-sku-title span {
-      font-size: 1rem;
-    }
-
-    .admin-auth {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-top: 4px;
-      padding: 8px;
-      border-radius: 10px;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid var(--border-subtle);
-    }
-
-    .admin-auth-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .admin-auth-input {
-      border-radius: var(--radius-pill);
-      border: 1px solid var(--border-subtle);
-      padding: 6px 10px;
-      background: rgba(10, 21, 32, 0.9);
-      color: var(--text);
-      font-size: 0.8rem;
-      outline: none;
-      min-width: 160px;
-    }
-
-    .auth-status {
-      font-size: 0.75rem;
-      color: #9ca3af;
-    }
-
-    .auth-status.ok {
-      color: #bbf7d0;
-    }
-
-    .auth-status.error {
-      color: #fecaca;
-    }
-
-    .add-sku-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-    }
-
-    @media (min-width: 720px) {
-      .add-sku-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-    }
-
-    .add-sku-field {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .add-sku-label {
-      font-size: 0.75rem;
-      color: #9ca3af;
-    }
-
-    .add-sku-input {
-      border-radius: var(--radius-pill);
-      border: 1px solid var(--border-subtle);
-      padding: 6px 10px;
-      background: rgba(10, 21, 32, 0.9);
-      color: var(--text);
-      font-size: 0.8rem;
-      outline: none;
-    }
-
-    .add-sku-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    /* RESULTS */
+    /* RESULTS HEADER */
     .results-header {
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
-      gap: 6px;
-      font-size: 0.8rem;
       color: var(--muted);
-      padding: 0 2px;
+      font-size: 0.8rem;
     }
 
     .results-header strong {
       color: var(--text);
     }
 
+    /* GRID OF CARDS */
     .sku-grid {
-      margin-top: 4px;
       display: grid;
+      gap: 12px;
+      margin-top: 8px;
       grid-template-columns: 1fr;
-      gap: 10px;
     }
 
-    @media (min-width: 640px) {
+    @media (min-width: 600px) {
       .sku-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    @media (min-width: 1080px) {
+    @media (min-width: 1000px) {
       .sku-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(3, 1fr);
       }
     }
 
     .sku-card {
-      background: radial-gradient(circle at top left, #203447 0, #0c1722 55%, #050b10 100%);
+      background: radial-gradient(circle at top left, #203447 0, #0c1722 60%, #050b10);
       border-radius: var(--radius-lg);
+      padding: 14px;
       border: 1px solid var(--border-subtle);
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      box-shadow: var(--shadow-soft);
+      cursor: pointer;
+      transition: 0.2s;
       position: relative;
-      overflow: hidden;
-      cursor: default;
-      transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
     }
 
     .sku-card:hover {
-      transform: translateY(-1px);
-      border-color: rgba(96, 165, 250, 0.6);
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
+      transform: translateY(-2px);
+      border-color: var(--accent);
     }
 
     .sku-year-pill {
       position: absolute;
-      top: 8px;
-      right: 8px;
-      font-size: 0.6rem;
-      padding: 2px 8px;
-      border-radius: var(--radius-pill);
+      top: 10px;
+      right: 10px;
       background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      color: #e2e8f0;
+      padding: 3px 10px;
+      font-size: 0.7rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid #6b7b8c;
+      color: #d0d7df;
     }
 
     .sku-name {
-      font-size: 0.9rem;
+      font-size: 1rem;
       font-weight: 600;
-      margin-right: 60px;
+      margin-bottom: 4px;
     }
 
     .sku-sku {
-      font-size: 0.78rem;
       color: var(--muted);
+      font-size: 0.8rem;
     }
 
     .sku-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      font-size: 0.72rem;
-      color: var(--muted);
-    }
-
-    .sku-meta span {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: var(--accent);
+      margin-top: 6px;
+      color: #9bb3ca;
+      font-size: 0.75rem;
     }
 
     .empty-state {
+      margin-top: 20px;
+      padding: 20px;
       text-align: center;
       color: var(--muted);
-      font-size: 0.85rem;
-      margin-top: 16px;
-      padding: 16px;
-      border-radius: var(--radius-lg);
       border: 1px dashed var(--border-subtle);
-      background: rgba(15, 23, 42, 0.8);
+      border-radius: var(--radius-lg);
+      background: rgba(15, 23, 42, 0.6);
     }
 
-    .hidden {
+    /* POPUP */
+    .popup-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
       display: none;
+      align-items: center;
+      justify-content: center;
     }
 
-    #importFile {
-      display: none;
+    .popup {
+      background: #14232f;
+      padding: 20px;
+      border-radius: 14px;
+      width: 90%;
+      max-width: 400px;
+      border: 1px solid var(--accent);
+    }
+
+    .popup h2 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .popup-close {
+      margin-top: 12px;
+      background: var(--accent);
+      border: none;
+      padding: 8px 12px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <main class="app-shell">
+
     <!-- HEADER -->
     <header class="header">
-      <div class="header-left">
-        <div class="title-block">
-          <h1>
-            HPA SKU Catalog
-            <span class="pill">Shared CSV</span>
-          </h1>
-          <p class="subtitle">
-            Browse SKUs from a shared CSV hosted on GitHub Pages. Use the Manage tab (password HF-HPA) to adjust SKUs
-            and export an updated CSV.
-          </p>
-        </div>
-      </div>
-      <div class="quick-actions">
-        <button id="resetBtn" class="btn btn-primary" type="button">
-          <span class="icon">🔄</span>
-          Reset filters
-        </button>
+      <div class="title-block">
+        <h1>HPA SKU Catalog <span class="pill">Read‑Only</span></h1>
+        <p class="subtitle">View SKUs loaded from a shared company CSV file.</p>
       </div>
     </header>
 
-    <!-- TABS -->
-    <nav class="tabs">
-      <button class="tab active" data-tab="browse">Browse SKUs</button>
-      <button class="tab" data-tab="manage">Manage SKUs</button>
-    </nav>
-
-    <!-- BROWSE TAB -->
-    <section id="tab-browse" class="tab-content">
-      <!-- FILTERS -->
-      <section class="controls">
-        <!-- SKU NAME (main filter) -->
-        <div class="search-wrapper">
-          <span class="search-icon">🔎</span>
-          <input
-            id="nameFilter"
-            class="search-input"
-            type="search"
-            placeholder="Filter by SKU name…"
-          />
-        </div>
-
-        <!-- Other filters -->
-        <div class="filters">
-          <div class="filter-group">
-            <span class="filter-label">SKU</span>
-            <input id="skuFilter" class="text-filter" type="search" placeholder="e.g. 1005-837-400" />
-          </div>
-
-          <div class="filter-group">
-            <span class="filter-label">Sent In</span>
-            <input id="sentInFilter" class="text-filter" type="search" placeholder="e.g. 6 or Promo" />
-          </div>
-
-          <div class="filter-group">
-            <span class="filter-label">Year Sent</span>
-            <select id="yearFilter">
-              <option value="all">All years</option>
-              <option value="2022">2022</option>
-              <option value="2023">2023</option>
-              <option value="2024">2024</option>
-              <option value="2025">2025</option>
-              <option value="2026">2026</option>
-            </select>
-          </div>
-        </div>
-      </section>
-
-      <!-- RESULTS HEADER -->
-      <div class="results-header">
-        <div><strong id="resultCount">0</strong> SKUs shown</div>
-        <div>Tap a card for a quick overview of Sent In & Year Sent.</div>
+    <!-- FILTER BAR -->
+    <section class="controls">
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input id="nameFilter" class="search-input" type="text"
+               placeholder="Filter by SKU name…" />
       </div>
 
-      <!-- SKU GRID -->
-      <section id="skuGrid" class="sku-grid"></section>
+      <div class="filters">
+        <div class="filter-group">
+          <span class="filter-label">SKU</span>
+          <input id="skuFilter" class="filter-input" type="text"
+                 placeholder="e.g. 1005-837-400" />
+        </div>
 
-      <div id="emptyState" class="empty-state" style="display:none;">
-        No SKUs match your filters. Try clearing one or more fields, or add a new SKU in the Manage tab.
+        <div class="filter-group">
+          <span class="filter-label">Sent In</span>
+          <input id="sentInFilter" class="filter-input" type="text"
+                 placeholder="e.g. 6 or Promo" />
+        </div>
+
+        <div class="filter-group">
+          <span class="filter-label">Year Sent</span>
+          <select id="yearFilter" class="filter-input">
+            <option value="all">All Years</option>
+            <option>2022</option>
+            <option>2023</option>
+            <option>2024</option>
+            <option>2025</option>
+            <option>2026</option>
+          </select>
+        </div>
       </div>
     </section>
 
-    <!-- MANAGE TAB -->
-    <section id="tab-manage" class="tab-content hidden">
-      <section class="add-sku">
-        <div class="add-sku-title">
-          <span>🛠️</span> Manage SKUs (Password Required)
-        </div>
-        <div class="admin-auth">
-          <div class="admin-auth-row">
-            <input
-              id="adminPassword"
-              class="admin-auth-input"
-              type="password"
-              placeholder="Enter admin password"
-            />
-            <button id="unlockBtn" class="btn btn-small btn-secondary" type="button">
-              <span class="icon">🔓</span> Unlock
-            </button>
-          </div>
-          <div id="authStatus" class="auth-status">
-            Enter password <strong>HF-HPA</strong> to enable add and remove actions (session only).
-          </div>
-        </div>
+    <!-- RESULTS HEADER -->
+    <div class="results-header">
+      <div><strong id="resultCount">0</strong> SKUs shown</div>
+      <div>Click a card to view details.</div>
+    </div>
 
-        <p style="font-size:0.75rem;color:var(--muted);margin-top:4px;">
-          Once unlocked, you can add SKUs below and remove them from the Browse tab. Use Download CSV to create a new
-          <strong>SKU_Name_2026.csv</strong> and upload it to GitHub so everyone sees your changes.
-        </p>
+    <!-- SKU GRID -->
+    <section id="skuGrid" class="sku-grid"></section>
 
-        <div class="add-sku-grid">
-          <div class="add-sku-field">
-            <label for="addYear" class="add-sku-label">Year Sent</label>
-            <input id="addYear" class="add-sku-input" type="text" placeholder="e.g. 2026" />
-          </div>
-          <div class="add-sku-field">
-            <label for="addName" class="add-sku-label">SKU Name</label>
-            <input id="addName" class="add-sku-input" type="text" placeholder='e.g. 6" New Variety' />
-          </div>
-          <div class="add-sku-field">
-            <label for="addSku" class="add-sku-label">SKU</label>
-            <input id="addSku" class="add-sku-input" type="text" placeholder="e.g. 1234-567-890" />
-          </div>
-          <div class="add-sku-field">
-            <label for="addSentIn" class="add-sku-label">Sent In</label>
-            <input id="addSentIn" class="add-sku-input" type="text" placeholder='e.g. "6" or "Promo"' />
-          </div>
-        </div>
-        <div class="add-sku-actions">
-          <button id="addSkuBtn" class="btn btn-primary btn-small" type="button" disabled>
-            <span class="icon">✅</span> Add SKU to List (session only)
-          </button>
-          <button id="downloadCsvBtn" class="btn btn-small" type="button">
-            <span class="icon">⬇️</span> Download Updated CSV
-          </button>
-        </div>
-      </section>
-    </section>
+    <div id="emptyState" class="empty-state" style="display:none;">
+      No SKUs found. Adjust your filters.
+    </div>
   </main>
 
+  <!-- POPUP -->
+  <div id="popupBackdrop" class="popup-backdrop">
+    <div class="popup">
+      <h2 id="popupName"></h2>
+      <p><strong>SKU:</strong> <span id="popupSku"></span></p>
+      <p><strong>Sent In:</strong> <span id="popupSent"></span></p>
+      <p><strong>Year Sent:</strong> <span id="popupYear"></span></p>
+      <button class="popup-close" id="popupClose">Close</button>
+    </div>
+  </div>
   <script>
-    // Shared CSV URL on GitHub Pages
-    const CSV_URL = 'https://HF-HPA.github.io/HPA-SKU-CATALOG/SKU_Name_2026.csv';
-    const PASSWORD = 'HF-HPA';
+  const CSV_URL =
+    "https://hf-hpa.github.io/HPA-SKU-CATALOG/SKU_Name_2026.csv";
 
-    let skuData = [];
-    let isAuthorized = false;
+  let skuData = [];
 
-    const nameFilter = document.getElementById('nameFilter');
-    const skuFilter = document.getElementById('skuFilter');
-    const sentInFilter = document.getElementById('sentInFilter');
-    const yearFilter = document.getElementById('yearFilter');
-    const skuGrid = document.getElementById('skuGrid');
-    const resultCount = document.getElementById('resultCount');
-    const emptyState = document.getElementById('emptyState');
-    const resetBtn = document.getElementById('resetBtn');
+  const nameFilter = document.getElementById("nameFilter");
+  const skuFilter = document.getElementById("skuFilter");
+  const sentInFilter = document.getElementById("sentInFilter");
+  const yearFilter = document.getElementById("yearFilter");
+  const skuGrid = document.getElementById("skuGrid");
+  const resultCount = document.getElementById("resultCount");
+  const emptyState = document.getElementById("emptyState");
 
-    const addYear = document.getElementById('addYear');
-    const addName = document.getElementById('addName');
-    const addSku = document.getElementById('addSku');
-    const addSentIn = document.getElementById('addSentIn');
-    const addSkuBtn = document.getElementById('addSkuBtn');
-    const downloadCsvBtn = document.getElementById('downloadCsvBtn');
+  const popupBackdrop = document.getElementById("popupBackdrop");
+  const popupName = document.getElementById("popupName");
+  const popupSku = document.getElementById("popupSku");
+  const popupSent = document.getElementById("popupSent");
+  const popupYear = document.getElementById("popupYear");
+  const popupClose = document.getElementById("popupClose");
 
-    const adminPassword = document.getElementById('adminPassword');
-    const unlockBtn = document.getElementById('unlockBtn');
-    const authStatus = document.getElementById('authStatus');
+  function parseCsvLine(line) {
+    const result = [];
+    let current = "";
+    let inQuotes = false;
 
-    const tabs = document.querySelectorAll('.tab');
-    const tabBrowse = document.getElementById('tab-browse');
-    const tabManage = document.getElementById('tab-manage');
-
-    /* AUTH */
-    function updateAuthUI() {
-      if (isAuthorized) {
-        addSkuBtn.disabled = false;
-        authStatus.textContent =
-          'Unlocked: you can add new SKUs (session only) and remove them from the Browse tab.';
-        authStatus.classList.add('ok');
-        authStatus.classList.remove('error');
-      } else {
-        addSkuBtn.disabled = true;
-        authStatus.textContent = 'Enter password HF-HPA to enable add and remove actions (session only).';
-        authStatus.classList.remove('ok');
-        authStatus.classList.remove('error');
-      }
-    }
-
-    unlockBtn.addEventListener('click', () => {
-      const val = adminPassword.value.trim();
-      if (val === PASSWORD) {
-        isAuthorized = true;
-        adminPassword.value = '';
-        updateAuthUI();
-        renderList();
-      } else {
-        isAuthorized = false;
-        authStatus.textContent = 'Incorrect password. Try again.';
-        authStatus.classList.add('error');
-        addSkuBtn.disabled = true;
-      }
-    });
-
-    /* TABS */
-    tabs.forEach(btn => {
-      btn.addEventListener('click', () => {
-        tabs.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const t = btn.dataset.tab;
-        if (t === 'browse') {
-          tabBrowse.classList.remove('hidden');
-          tabManage.classList.add('hidden');
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      if (char === '"') {
+        if (inQuotes && line[i + 1] === '"') {
+          current += '"';
+          i++;
         } else {
-          tabManage.classList.remove('hidden');
-          tabBrowse.classList.add('hidden');
+          inQuotes = !inQuotes;
         }
-      });
+      } else if (char === "," && !inQuotes) {
+        result.push(current);
+        current = "";
+      } else {
+        current += char;
+      }
+    }
+    result.push(current);
+    return result;
+  }
+
+  function parseCsv(text) {
+    const lines = text.split(/\r?\n/).filter((l) => l.trim() !== "");
+    if (lines.length < 2) return [];
+
+    const header = lines[0].split(",").map((h) => h.trim().toLowerCase());
+    const yearIdx = header.indexOf("year sent");
+    const nameIdx = header.indexOf("sku name");
+    const skuIdx = header.indexOf("sku");
+    const sentIdx = header.indexOf("sent in");
+
+    const data = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const row = parseCsvLine(lines[i]);
+      if (!row.length) continue;
+
+      const item = {
+        yearSent: row[yearIdx] || "",
+        name: row[nameIdx] || "",
+        sku: row[skuIdx] || "",
+        sentIn: row[sentIdx] || "",
+      };
+
+      if (item.name && item.sku) data.push(item);
+    }
+
+    return data;
+  }
+
+  function createCard(item) {
+    const card = document.createElement("div");
+    card.className = "sku-card";
+
+    const pill = document.createElement("div");
+    pill.className = "sku-year-pill";
+    pill.textContent = item.yearSent;
+
+    const name = document.createElement("div");
+    name.className = "sku-name";
+    name.textContent = item.name;
+
+    const sku = document.createElement("div");
+    sku.className = "sku-sku";
+    sku.textContent = "SKU: " + item.sku;
+
+    const meta = document.createElement("div");
+    meta.className = "sku-meta";
+    meta.textContent = "Sent In: " + item.sentIn;
+
+    card.appendChild(pill);
+    card.appendChild(name);
+    card.appendChild(sku);
+    card.appendChild(meta);
+
+    card.addEventListener("click", () => {
+      popupName.textContent = item.name;
+      popupSku.textContent = item.sku;
+      popupSent.textContent = item.sentIn;
+      popupYear.textContent = item.yearSent;
+      popupBackdrop.style.display = "flex";
     });
 
-    /* RENDER SKUs */
-    function createCard(item, index) {
-      const card = document.createElement('article');
-      card.className = 'sku-card';
+    return card;
+  }
 
-      const yearPill = document.createElement('div');
-      yearPill.className = 'sku-year-pill';
-      yearPill.textContent = item.yearSent || '—';
+  popupClose.addEventListener("click", () => {
+    popupBackdrop.style.display = "none";
+  });
 
-      const name = document.createElement('h2');
-      name.className = 'sku-name';
-      name.textContent = item.name;
+  popupBackdrop.addEventListener("click", (e) => {
+    if (e.target === popupBackdrop) popupBackdrop.style.display = "none";
+  });
 
-      const skuLine = document.createElement('div');
-      skuLine.className = 'sku-sku';
-      skuLine.textContent = `SKU: ${item.sku}`;
+  function renderList() {
+    skuGrid.innerHTML = "";
 
-      const meta = document.createElement('div');
-      meta.className = 'sku-meta';
+    const nameQ = nameFilter.value.toLowerCase();
+    const skuQ = skuFilter.value.toLowerCase();
+    const sentQ = sentInFilter.value.toLowerCase();
+    const yearQ = yearFilter.value;
 
-      const sentSpan = document.createElement('span');
-      sentSpan.innerHTML = '<span class="dot"></span>Sent In: ' + (item.sentIn || '—');
+    const filtered = skuData.filter((item) => {
+      return (
+        (!nameQ || item.name.toLowerCase().includes(nameQ)) &&
+        (!skuQ || item.sku.toLowerCase().includes(skuQ)) &&
+        (!sentQ || item.sentIn.toLowerCase().includes(sentQ)) &&
+        (yearQ === "all" || item.yearSent === yearQ)
+      );
+    });
 
-      const yearSpan = document.createElement('span');
-      yearSpan.textContent = 'Year Sent: ' + (item.yearSent || '—');
+    filtered.forEach((item) => {
+      skuGrid.appendChild(createCard(item));
+    });
 
-      meta.appendChild(sentSpan);
-      meta.appendChild(yearSpan);
+    resultCount.textContent = filtered.length;
+    emptyState.style.display = filtered.length ? "none" : "block";
+  }
 
-      card.appendChild(yearPill);
-      card.appendChild(name);
-      card.appendChild(skuLine);
-      card.appendChild(meta);
+  nameFilter.addEventListener("input", renderList);
+  skuFilter.addEventListener("input", renderList);
+  sentInFilter.addEventListener("input", renderList);
+  yearFilter.addEventListener("change", renderList);
 
-      if (isAuthorized) {
-        const removeBtn = document.createElement('button');
-        removeBtn.type = 'button';
-        removeBtn.className = 'btn btn-small btn-remove';
-        removeBtn.innerHTML = '<span class="icon">🗑️</span> Remove (session only)';
-        removeBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const confirmDelete = confirm(`Remove SKU "${item.name}" from this session?`);
-          if (confirmDelete) {
-            skuData.splice(index, 1);
-            renderList();
-          }
-        });
-        card.appendChild(removeBtn);
-      }
-
-      card.addEventListener('click', () => {
-        alert(
-          `${item.name}\n\nSKU: ${item.sku}\nSent In: ${item.sentIn || '—'}\nYear Sent: ${item.yearSent || '—'}`
-        );
-      });
-
-      return card;
-    }
-
-    function renderList() {
-      skuGrid.innerHTML = '';
-
-      const nameQ = (nameFilter.value || '').toLowerCase();
-      const skuQ = (skuFilter.value || '').toLowerCase();
-      const sentQ = (sentInFilter.value || '').toLowerCase();
-      const yearQ = yearFilter.value;
-
-      const filteredWithIndex = skuData
-        .map((item, index) => ({ item, index }))
-        .filter(({ item }) => {
-          const matchesName = !nameQ || item.name.toLowerCase().includes(nameQ);
-          const matchesSku = !skuQ || item.sku.toLowerCase().includes(skuQ);
-          const matchesSent = !sentQ || (item.sentIn || '').toLowerCase().includes(sentQ);
-          const matchesYear = yearQ === 'all' || (item.yearSent && item.yearSent.toString() === yearQ);
-          return matchesName && matchesSku && matchesSent && matchesYear;
-        });
-
-      filteredWithIndex.forEach(({ item, index }) => skuGrid.appendChild(createCard(item, index)));
-
-      resultCount.textContent = filteredWithIndex.length;
-      emptyState.style.display = filteredWithIndex.length === 0 ? 'block' : 'none';
-    }
-
-    /* ADD SKU (session only) */
-    addSkuBtn.addEventListener('click', () => {
-      if (!isAuthorized) {
-        alert('Enter the admin password (HF-HPA) to add SKUs.');
-        return;
-      }
-
-      const year = addYear.value.trim();
-      const name = addName.value.trim();
-      const sku = addSku.value.trim();
-      const sent = addSentIn.value.trim();
-
-      if (!name || !sku) {
-        alert('Please enter at least SKU Name and SKU.');
-        return;
-      }
-
-      skuData.push({
-        yearSent: year,
-        name: name,
-        sku: sku,
-        sentIn: sent
-      });
-
-      addName.value = '';
-      addSku.value = '';
-      addSentIn.value = '';
-
+  async function loadCsv() {
+    try {
+      const res = await fetch(CSV_URL);
+      const text = await res.text();
+      skuData = parseCsv(text);
       renderList();
-    });
-
-    /* EXPORT CSV (for replacing on GitHub) */
-    function exportCsv() {
-      if (!skuData.length) {
-        alert('No SKUs to export yet. Add at least one SKU first.');
-        return;
-      }
-
-      const headers = ['Year Sent', 'SKU Name', 'SKU', 'Sent In'];
-      const rows = skuData.map(item => [
-        item.yearSent || '',
-        item.name || '',
-        item.sku || '',
-        item.sentIn || ''
-      ]);
-
-      let csv = headers.join(',') + '\n';
-      csv += rows.map(r =>
-        r.map(val => `"${String(val).replace(/"/g, '""')}"`).join(',')
-      ).join('\n');
-
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'SKU_Name_2026_UPDATED.csv';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+    } catch (err) {
+      alert("Error loading CSV. Check that SKU_Name_2026.csv is in your GitHub repo.");
     }
+  }
 
-    downloadCsvBtn.addEventListener('click', exportCsv);
-
-    /* FILTER EVENTS + RESET */
-    nameFilter.addEventListener('input', renderList);
-    skuFilter.addEventListener('input', renderList);
-    sentInFilter.addEventListener('input', renderList);
-    yearFilter.addEventListener('change', renderList);
-
-    resetBtn.addEventListener('click', () => {
-      nameFilter.value = '';
-      skuFilter.value = '';
-      sentInFilter.value = '';
-      yearFilter.value = 'all';
-      renderList();
-    });
-
-    /* LOAD CSV FROM GITHUB PAGES */
-    async function loadCsv() {
-      try {
-        const response = await fetch(CSV_URL);
-        if (!response.ok) {
-          throw new Error('Failed to load CSV from GitHub Pages');
-        }
-        const text = await response.text();
-        skuData = parseCsv(text);
-        renderList();
-      } catch (err) {
-        console.error(err);
-        alert('Error loading shared CSV. Check that SKU_Name_2026.csv is in your GitHub repo and GitHub Pages is enabled.');
-      }
-    }
-
-    function parseCsv(text) {
-      const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0);
-      if (lines.length < 2) return [];
-
-      const header = lines[0].split(',').map(h => h.trim().toLowerCase());
-      const yearIdx = header.indexOf('year sent');
-      const nameIdx = header.indexOf('sku name');
-      const skuIdx = header.indexOf('sku');
-      const sentIdx = header.indexOf('sent in');
-
-      const data = [];
-
-      for (let i = 1; i < lines.length; i++) {
-        const row = parseCsvLine(lines[i]);
-        if (!row.length) continue;
-        const item = {
-          yearSent: yearIdx >= 0 ? (row[yearIdx] || '').trim() : '',
-          name: nameIdx >= 0 ? (row[nameIdx] || '').trim() : '',
-          sku: skuIdx >= 0 ? (row[skuIdx] || '').trim() : '',
-          sentIn: sentIdx >= 0 ? (row[sentIdx] || '').trim() : ''
-        };
-        if (!item.name || !item.sku) continue;
-        data.push(item);
-      }
-      return data;
-    }
-
-    function parseCsvLine(line) {
-      const result = [];
-      let current = '';
-      let inQuotes = false;
-
-      for (let i = 0; i < line.length; i++) {
-        const char = line[i];
-        if (char === '"') {
-          if (inQuotes && line[i + 1] === '"') {
-            current += '"';
-            i++;
-          } else {
-            inQuotes = !inQuotes;
-          }
-        } else if (char === ',' && !inQuotes) {
-          result.push(current);
-          current = '';
-        } else {
-          current += char;
-        }
-      }
-      result.push(current);
-      return result;
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      updateAuthUI();
-      loadCsv();
-    });
-  </script>
+  loadCsv();
+</script>
 </body>
 </html>
-
