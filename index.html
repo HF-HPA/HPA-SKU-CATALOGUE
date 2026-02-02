@@ -24,7 +24,11 @@
       --transition-fast: 0.18s ease-out;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -395,8 +399,7 @@
 <body>
   <main class="app-shell">
 
-    <!-- HEADER -->
-    
+    <!-- HEADER --> 
 <header class="header">
   <div class="header-left">
     <img src="hf_logo.png" class="logo" alt="HF Logo" />
@@ -408,7 +411,7 @@
 </header>
 
 
-    <!-- TABS: SKU Catalogue, Order Breakdown, Plant Care Guide -->
+    <!-- TABS: 1) SKU Catalogue 2) Order Breakdown 3) Plant Care Guide -->
     <nav class="tabs">
       <button class="tab active" data-tab="catalog">SKU Catalogue</button>
       <button class="tab" data-tab="orders">Order Breakdown</button>
@@ -483,7 +486,7 @@
             Shipping Week #: <span id="obWeekDisplay">TBD</span>
           </div>
           <div class="ob-grades-box">
-            Store Grade Shipping: <span id="obGradesDisplay">—</span>
+            Store Grade Shipping: <span id="obGradesDisplay">All stores</span>
           </div>
         </div>
 
@@ -545,6 +548,13 @@
     // ===== CONFIG =====
     const SKU_CSV_URL   = "SKU_Name_2026.csv";   // main SKU list
     const ORDER_CSV_URL = "OrderBreakdown.csv";  // order breakdown list
+
+    // Store-grade text per week (edit these as needed)
+    const STORE_GRADES_BY_WEEK = {
+      "6": "All stores",
+      "7": "A, B, C, D"
+      // Add "8": "A, C" etc. as needed
+    };
 
     let skuData = [];
     let orderData = [];
@@ -769,7 +779,7 @@
     function applyOrderBreakdown(data) {
       if (!data || !data.length) {
         if (obWeekDisplay)   obWeekDisplay.textContent   = "TBD";
-        if (obGradesDisplay) obGradesDisplay.textContent = "—";
+        if (obGradesDisplay) obGradesDisplay.textContent = "All stores";
         Object.values(obBodies).forEach(el => { if (el) el.textContent = ""; });
         return;
       }
@@ -789,11 +799,15 @@
 
       const rowsForWeek = data.filter(d => d.week === currentWeek);
 
-      // 2) Determine categories for that week
-      const categories = Array.from(new Set(rowsForWeek.map(d => d.category))).filter(Boolean);
+      // 2) Set Shipping Week # and Store Grade Shipping text
+      if (obWeekDisplay) {
+        obWeekDisplay.textContent = currentWeek;
+      }
 
-      if (obWeekDisplay)   obWeekDisplay.textContent   = currentWeek;
-      if (obGradesDisplay) obGradesDisplay.textContent = categories.join(", ");
+      if (obGradesDisplay) {
+        const gradesText = STORE_GRADES_BY_WEEK[currentWeek] || "All stores";
+        obGradesDisplay.textContent = gradesText;
+      }
 
       // 3) Fill FLO/FOL/UCO/FHB/TRP/SPC boxes with "Size — Plant Name"
       const CAT_LIST = ["FLO", "FOL", "UCO", "FHB", "TRP", "SPC"];
@@ -839,7 +853,7 @@
         applyOrderBreakdown(orderData);
       } catch (err) {
         console.error(err);
-        // If missing or broken, leave breakdown as TBD/empty.
+        // If missing or broken, leave breakdown as TBD/All stores.
       }
     }
 
@@ -854,4 +868,3 @@
   </script>
 </body>
 </html>
-
