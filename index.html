@@ -442,12 +442,65 @@
       </div>
     </section>
 
-   <!-- TAB: ORDER BREAKDOWN -->
-    <section id="tab-orders" class="tab-content hidden">  
-    <div class="under-construction">
-    This section is under construction, check back on Spring Kick Off 2026.
+<!-- TAB: ORDER BREAKDOWN -->
+<section id="tab-orders" class="tab-content hidden">
+  <div class="order-breakdown-wrapper">
+    
+    <!-- Top header boxes -->
+    <div class="ob-header-stack">
+      <!-- Week box -->
+      <div class="ob-week-box">
+        <!-- You can change this text each week -->
+        Week #: <span id="obWeekDisplay">TBD</span>
+      </div>
+      <!-- Store grades box -->
+      <div class="ob-grades-box">
+        Store Grades that are shipping: <span id="obGradesDisplay">FLO, FOL, FHB, TRP, UCO, SPC</span>
+      </div>
     </div>
-    </section>
+
+    <!-- 6 shipping category boxes -->
+    <div class="ob-grid">
+      <div class="ob-box">
+        <div class="ob-box-title">FLO</div>
+        <div class="ob-box-body" id="obFloBody">
+          <!-- Example content:
+          6" Seasonal Ceramic
+          SKU: 1011-165-461
+          Sent In: Week 6
+          Year Sent: 2026
+          -->
+        </div>
+      </div>
+
+      <div class="ob-box">
+        <div class="ob-box-title">FOL</div>
+        <div class="ob-box-body" id="obFolBody"></div>
+      </div>
+
+      <div class="ob-box">
+        <div class="ob-box-title">UCO</div>
+        <div class="ob-box-body" id="obUcoBody"></div>
+      </div>
+
+      <div class="ob-box">
+        <div class="ob-box-title">FHB</div>
+        <div class="ob-box-body" id="obFhbBody"></div>
+      </div>
+
+      <div class="ob-box">
+        <div class="ob-box-title">TRP</div>
+        <div class="ob-box-body" id="obTrpBody"></div>
+      </div>
+
+      <div class="ob-box">
+        <div class="ob-box-title">SPC</div>
+        <div class="ob-box-body" id="obSpcBody"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
     
     <!-- TAB: PLANT CARE GUIDE -->
     <section id="tab-care" class="tab-content hidden">
@@ -680,6 +733,7 @@
   </script>
 </body>
 </html>
+
 
 
 
