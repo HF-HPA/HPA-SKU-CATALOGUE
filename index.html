@@ -593,6 +593,39 @@
       });
     });
 
+    // ===== ORDER BREAKDOWN CONFIG =====
+// Edit this object each week to change what shows in the Order Breakdown tab.
+const ORDER_BREAKDOWN = {
+  week: "6", // Shipping week number
+  grades: "All STORES",
+
+  FLO: [
+    // Each string here becomes a line in the FLO box
+    '6" Seasonal Ceramic — SKU: 1011-165-461 — Sent In: 6 — Year Sent: 2026',
+    '4" Holiday Ceramic — SKU: 1013-666-959 — Sent In: 6 — Year Sent: 2026'
+  ],
+
+  FOL: [
+    '6" Foliage in Daphne — SKU: 1006-939-475 — Sent In: 6 — Year Sent: 2026'
+  ],
+
+  UCO: [
+    'Example UCO item — SKU: 0000-000-000 — Sent In: 6 — Year Sent: 2026'
+  ],
+
+  FHB: [
+    // Add FHB items here
+  ],
+
+  TRP: [
+    // Add TRP items here
+  ],
+
+  SPC: [
+    // Add SPC items here
+  ]
+};
+    
     // Simple constants to control the week / grades text
     const CURRENT_WEEK = "TBD"; // change this when needed
     const CURRENT_GRADES = "FLO, FOL, FHB, TRP, UCO, SPC";
@@ -783,6 +816,7 @@
 </body>
 </html>
 ``
+
 
 
 
