@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Website icon (favicon) – requires hpa_logo.png in repo root -->
-  <link rel="icon" type="image/png" href="hpa_logo.png" />
+  hpa_logo.png
 
   <style>
     :root {
@@ -378,9 +378,7 @@
       max-width: 420px;
     }
 
-    .popup h2 {
-      margin-bottom: 8px;
-    }
+    .popup h2 { margin-bottom: 8px; }
 
     .popup-close {
       margin-top: 12px;
@@ -400,7 +398,7 @@
     <!-- HEADER -->
     <header class="header">
       <div class="header-left">
-        <!-- Header Logo – must have hf_logo.png in repo root -->
+        <!-- Header Logo – requires hf_logo.png in repo root -->
         hf_logo.png
         <div class="title-block">
           <h1>HF-HPA</h1>
@@ -545,7 +543,7 @@
   <script>
     // ===== CONFIG =====
     const SKU_CSV_URL   = "SKU_Name_2026.csv";   // main SKU list
-    const ORDER_CSV_URL = "OrderBreakdown.csv";  // order breakdown CSV
+    const ORDER_CSV_URL = "OrderBreakdown.csv";  // order breakdown list
 
     let skuData = [];
     let orderData = [];
@@ -555,7 +553,6 @@
     const tabCatalog = document.getElementById("tab-catalog");
     const tabOrders  = document.getElementById("tab-orders");
     const tabCare    = document.getElementById("tab-care");
-
     const tabSections = { catalog: tabCatalog, orders: tabOrders, care: tabCare };
 
     tabs.forEach(btn => {
@@ -569,7 +566,7 @@
       });
     });
 
-    // ORDER BREAKDOWN DOM
+    // Order breakdown DOM refs
     const obWeekDisplay   = document.getElementById("obWeekDisplay");
     const obGradesDisplay = document.getElementById("obGradesDisplay");
     const obBodies = {
@@ -581,7 +578,7 @@
       SPC: document.getElementById("obSpcBody")
     };
 
-    // FILTER + POPUP DOM
+    // Filters & popup
     const nameFilter    = document.getElementById("nameFilter");
     const skuFilter     = document.getElementById("skuFilter");
     const sentInFilter  = document.getElementById("sentInFilter");
@@ -601,7 +598,9 @@
       popupBackdrop.style.display = "none";
     });
     popupBackdrop.addEventListener("click", (e) => {
-      if (e.target === popupBackdrop) popupBackdrop.style.display = "none";
+      if (e.target === popupBackdrop) {
+        popupBackdrop.style.display = "none";
+      }
     });
 
     // ===== CSV HELPERS =====
@@ -645,28 +644,32 @@
       for (let i = 1; i < lines.length; i++) {
         const row = parseCsvLine(lines[i]);
         if (!row.length) continue;
+
         const item = {
           yearSent: yearIdx >= 0 ? (row[yearIdx] || "").trim() : "",
           name:     nameIdx >= 0 ? (row[nameIdx] || "").trim() : "",
           sku:      skuIdx  >= 0 ? (row[skuIdx]  || "").trim() : "",
           sentIn:   sentIdx >= 0 ? (row[sentIdx] || "").trim() : ""
         };
-        if (item.name && item.sku) data.push(item);
+
+        if (item.name && item.sku) {
+          data.push(item);
+        }
       }
+
       return data;
     }
 
+    // Order breakdown CSV: Week,Category,Size,Plant Name
     function parseOrderCsv(text) {
       const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
       if (lines.length < 2) return [];
 
       const header = lines[0].split(",").map(h => h.toLowerCase().trim());
-      const weekIdx = header.indexOf("week");
-      const catIdx  = header.indexOf("category");
-      const nameIdx = header.indexOf("sku name");
-      const skuIdx  = header.indexOf("sku");
-      const sentIdx = header.indexOf("sent in");
-      const yearIdx = header.indexOf("year sent");
+      const weekIdx  = header.indexOf("week");
+      const catIdx   = header.indexOf("category");
+      const sizeIdx  = header.indexOf("size");
+      const plantIdx = header.indexOf("plant name");
 
       const data = [];
 
@@ -675,15 +678,13 @@
         if (!row.length) continue;
 
         const item = {
-          week:     weekIdx >= 0 ? (row[weekIdx] || "").trim() : "",
-          category: catIdx  >= 0 ? (row[catIdx]  || "").trim().toUpperCase() : "",
-          name:     nameIdx >= 0 ? (row[nameIdx] || "").trim() : "",
-          sku:      skuIdx  >= 0 ? (row[skuIdx]  || "").trim() : "",
-          sentIn:   sentIdx >= 0 ? (row[sentIdx] || "").trim() : "",
-          yearSent: yearIdx >= 0 ? (row[yearIdx] || "").trim() : ""
+          week:     weekIdx  >= 0 ? (row[weekIdx]  || "").trim() : "",
+          category: catIdx   >= 0 ? (row[catIdx]   || "").trim().toUpperCase() : "",
+          size:     sizeIdx  >= 0 ? (row[sizeIdx]  || "").trim() : "",
+          plant:    plantIdx >= 0 ? (row[plantIdx] || "").trim() : ""
         };
 
-        if (item.week && item.category && item.sku) {
+        if (item.week && item.category && (item.size || item.plant)) {
           data.push(item);
         }
       }
@@ -744,10 +745,10 @@
       const yearQ   = yearFilter.value;
 
       const filtered = skuData.filter(item => {
-        const itemName   = (item.name   || "").toLowerCase();
-        const itemSkuNorm= normalizeSku(item.sku || "");
-        const itemSent   = (item.sentIn || "").toLowerCase();
-        const itemYear   = item.yearSent ? item.yearSent.toString() : "";
+        const itemName    = (item.name   || "").toLowerCase();
+        const itemSkuNorm = normalizeSku(item.sku || "");
+        const itemSent    = (item.sentIn || "").toLowerCase();
+        const itemYear    = item.yearSent ? item.yearSent.toString() : "";
 
         const matchesName = !nameQ || itemName.includes(nameQ);
         const matchesSku  = !skuQNorm || itemSkuNorm.includes(skuQNorm);
@@ -763,16 +764,16 @@
       emptyState.classList.toggle("hidden", filtered.length !== 0);
     }
 
-    // ===== ORDER BREAKDOWN RENDERING =====
+    // ===== ORDER BREAKDOWN RENDERING (Size + Plant Name) =====
     function applyOrderBreakdown(data) {
       if (!data || !data.length) {
-        obWeekDisplay.textContent   = "TBD";
-        obGradesDisplay.textContent = "—";
+        if (obWeekDisplay)   obWeekDisplay.textContent   = "TBD";
+        if (obGradesDisplay) obGradesDisplay.textContent = "—";
         Object.values(obBodies).forEach(el => { if (el) el.textContent = ""; });
         return;
       }
 
-      // find latest week
+      // 1) Find the latest week value
       const weeks = Array.from(new Set(data.map(d => d.week))).filter(Boolean);
       let currentWeek = "TBD";
 
@@ -787,23 +788,29 @@
 
       const rowsForWeek = data.filter(d => d.week === currentWeek);
 
-      const categories = Array.from(
-        new Set(rowsForWeek.map(d => d.category))
-      ).filter(Boolean);
+      // 2) Determine categories for that week
+      const categories = Array.from(new Set(rowsForWeek.map(d => d.category))).filter(Boolean);
 
       if (obWeekDisplay)   obWeekDisplay.textContent   = currentWeek;
       if (obGradesDisplay) obGradesDisplay.textContent = categories.join(", ");
 
+      // 3) Fill FLO/FOL/UCO/FHB/TRP/SPC boxes with "Size — Plant Name"
       const CAT_LIST = ["FLO", "FOL", "UCO", "FHB", "TRP", "SPC"];
 
       CAT_LIST.forEach(cat => {
         const el = obBodies[cat];
         if (!el) return;
+
         const lines = rowsForWeek
           .filter(d => d.category === cat)
-          .map(d =>
-            `${d.name} — SKU: ${d.sku} — Sent In: ${d.sentIn} — Year Sent: ${d.yearSent}`
-          );
+          .map(d => {
+            const size  = d.size  || "";
+            const plant = d.plant || "";
+            if (size && plant) return `${size} — ${plant}`;
+            return size || plant || "";
+          })
+          .filter(Boolean);
+
         el.textContent = lines.join("\n");
       });
     }
@@ -831,7 +838,7 @@
         applyOrderBreakdown(orderData);
       } catch (err) {
         console.error(err);
-        // Silent fail for order breakdown: leave TBD if file not present
+        // If missing or broken, leave breakdown as TBD/empty.
       }
     }
 
@@ -840,19 +847,9 @@
     sentInFilter.addEventListener("input", renderList);
     yearFilter.addEventListener("change", renderList);
 
-    // Kick off data loading
+    // Kick off loading
     loadSkuCsv();
     loadOrderCsv();
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
